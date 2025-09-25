@@ -1,0 +1,7 @@
+---
+all:
+  children:
+    unraid:
+      hosts:
+        nas01:
+          ansible_host: 192.168.121.2
