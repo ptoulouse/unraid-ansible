@@ -1,0 +1,6 @@
+.ansible/
+.vaultpass
+galaxy_roles
+galaxy_collections
+venv
+ansible-unraid.code-workspace
