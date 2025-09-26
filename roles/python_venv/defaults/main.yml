@@ -29,5 +29,7 @@ python_venv_pip_version: "latest"
 #     state: "latest"
 python_venv_packages: []
 
-# Optional path to requirements.txt file.
-# requirements_file: "/path/to/requirements.txt"
+# Path to requirements file.
+# Example:
+# python_venv_requirements_file: "/path/to/requirements.txt"
+python_venv_requirements_file: ""
