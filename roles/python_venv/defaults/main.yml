@@ -3,8 +3,8 @@
 python_venv_path: "/mnt/user/appdata/venv"
 
 # User and group ownership for the virtual environment.
-python_venv_owner: "{{ ansible_user }}"
-python_venv_group: "{{ ansible_user }}"
+python_venv_owner: "root"
+python_venv_group: "root"
 
 # Permissions for the virtual environment directory.
 python_venv_mode: "0755"
