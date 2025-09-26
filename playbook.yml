@@ -1,0 +1,10 @@
+---
+- name: NAS01 Playbook
+  hosts: nas01
+  become: true
+  gather_facts: false
+  roles:
+    - role: python_venv
+      tags: python_venv
+      vars:
+        ansible_python_interpreter: "/usr/bin/python3" # Use system Python for initial setup
