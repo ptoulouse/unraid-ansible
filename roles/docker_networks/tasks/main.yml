@@ -1,0 +1,7 @@
+---
+- name: Create Docker external networks
+  community.docker.docker_network:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ docker_networks_list }}"
+  when: docker_networks_list | length > 0

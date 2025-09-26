@@ -8,3 +8,6 @@
       tags: python_venv
       vars:
         ansible_python_interpreter: "/usr/bin/python3" # Use system Python for initial setup
+
+    - role: docker_networks
+      tags: docker_networks

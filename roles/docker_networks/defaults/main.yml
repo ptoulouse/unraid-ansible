@@ -1,0 +1,3 @@
+---
+# List of Docker networks to create.
+docker_networks_list: []

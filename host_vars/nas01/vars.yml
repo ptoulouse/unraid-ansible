@@ -11,3 +11,9 @@ python_venv_packages:
   - passlib
   - bcrypt
   - requests
+
+# List of external docker networks to create.
+docker_networks_list:
+  - mail-relay
+  - ollama
+  - traefik
