@@ -1,0 +1,33 @@
+---
+# Path where the virtual environment will be created.
+python_venv_path: "/mnt/user/appdata/venv"
+
+# User and group ownership for the virtual environment.
+python_venv_owner: "{{ ansible_user }}"
+python_venv_group: "{{ ansible_user }}"
+
+# Permissions for the virtual environment directory.
+python_venv_mode: "0755"
+
+# Version of pip to install.
+python_venv_pip_version: "latest"
+
+# List of Python packages to install in the virtual environment.
+# Can be simple package names or dictionaries with name, version, state.
+# Example 1:
+# python_venv_packages:
+#   - "flask"
+#   - "gunicorn"
+#   - "pytest"
+# Example 2:
+# python_venv_packages:
+#   - name: "django"
+#     version: "4.2.0"
+#   - name: "requests"
+#   - "pandas"
+#   - name: "numpy"
+#     state: "latest"
+python_venv_packages: []
+
+# Optional path to requirements.txt file.
+# requirements_file: "/path/to/requirements.txt"
