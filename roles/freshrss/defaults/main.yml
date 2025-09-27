@@ -1,0 +1,16 @@
+---
+freshrss_stack_name: "freshrss"
+freshrss_stack_description: "FreshRSS - RSS feeds aggregator"
+
+freshrss_container_name: "freshrss"
+freshrss_hostname: "freshrss"
+
+freshrss_data_path: "{{ compose_data_path }}/{{ freshrss_stack_name }}"
+
+freshrss_version: "latest"
+
+
+freshrss_gid: "100"
+freshrss_uid: "99"
+
+freshrss_icon_url: https://github.com/walkxcode/Dashboard-Icons/raw/main/png/freshrss.png

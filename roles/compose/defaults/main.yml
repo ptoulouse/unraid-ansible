@@ -1,0 +1,51 @@
+---
+# Directory where the compose files are deployed.
+compose_path: /boot/config/plugins/compose.manager/projects
+
+# Data directory for the compose stack.
+compose_data_path: /mnt/user/appdata
+
+# Data subdirectories to create in the data directory.
+# Example:
+# compose_data_subdirs:
+#   - subdir: my_stack
+#   - subdir: my_stack/db
+#     owner: nobody
+#     group: users
+#     mode: '0750'
+#   - subdir: my_stack/data
+#     owner: root
+#     group: root
+#     mode: '0700'
+#
+# Subdir is required, owner, group and mode are optional.
+# Defaults are nobody, users and 0750.
+compose_data_subdirs: []
+
+# Configuration files to create in the data directory.
+# Example:
+# compose_config_files:
+#   - src: my.cnf.j2
+#     dest: my_stack/db/my.cnf
+#     owner: nobody
+#     group: users
+#     mode: '0640'
+#   - src: my_stack/data/another.conf
+#     owner: root
+#     group: root
+#     mode: '0600'
+#
+# File is required, owner, group and mode are optional.
+# Defaults are nobody, users and 0640.
+compose_config_files: []
+
+# Name of the compose template and destination file.
+compose_template: compose.yml.j2
+compose_file: docker-compose.yml
+
+# Set to 'true' when using Unraid Compose Manager plugin. The following files
+# will be created along the compose file: name, description, autostart.
+compose_manager: true
+
+# Define if Unraid Compose Manager Auto Start is set to on or off.
+compose_manager_autostart: true

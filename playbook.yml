@@ -12,3 +12,7 @@
 
     - role: docker_networks
       tags: docker_networks
+
+    # Other services
+    - role: freshrss
+      tags: freshrss
