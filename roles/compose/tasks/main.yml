@@ -1,0 +1,83 @@
+---
+- name: Assert that compose_stack_name is defined
+  ansible.builtin.assert:
+    that:
+      - compose_stack_name is defined
+      - compose_stack_name | length > 0
+    fail_msg: "'compose_stack_name' is not defined"
+
+- name: Create compose directory for {{ compose_stack_name }}
+  ansible.builtin.file:
+    dest: "{{ compose_path }}/{{ compose_stack_name }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Create data subdirs for {{ compose_stack_name }}
+  when: compose_data_subdirs | length > 0
+  ansible.builtin.file:
+    path: "{{ compose_data_path }}/{{ item.subdir }}"
+    state: directory
+    owner: "{{ item.owner | default('nobody') }}"
+    group: "{{ item.group | default('users') }}"
+    mode: "{{ item.mode | default('0750') }}"
+  loop: "{{ compose_data_subdirs }}"
+
+- name: Create configuration files for {{ compose_stack_name }}
+  when: compose_config_files | length > 0
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ compose_data_path }}/{{ item.dest }}"
+    owner: "{{ item.owner | default('nobody') }}"
+    group: "{{ item.group | default('users') }}"
+    mode: "{{ item.mode | default('0640') }}"
+  loop: "{{ compose_config_files }}"
+
+- name: Install compose file for {{ compose_stack_name }}
+  ansible.builtin.template:
+    src: "{{ compose_template }}"
+    dest: "{{ compose_path }}/{{ compose_stack_name }}/{{ compose_file }}"
+    owner: root
+    group: root
+    mode: '0600'
+    validate: docker-compose -f %s config
+  notify: Restart compose stack
+
+- name: Install Compose Manager files for {{ compose_stack_name }}
+  when: compose_manager
+  block:
+
+    - name: Install name file
+      ansible.builtin.copy:
+        content: |
+          {{ compose_stack_name }}
+        dest: "{{ compose_path }}/{{ compose_stack_name }}/name"
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Install description file
+      ansible.builtin.copy:
+        content: |
+          {{ compose_stack_description }}
+        dest: "{{ compose_path }}/{{ compose_stack_name }}/description"
+        owner: root
+        group: root
+        mode: '0600'
+      when: compose_stack_description is defined and compose_stack_description | length > 0
+
+    - name: Install autostart file
+      ansible.builtin.copy:
+        content: |
+          {{ compose_manager_autostart | ternary('true', 'false') }}
+        dest: "{{ compose_path }}/{{ compose_stack_name }}/autostart"
+        owner: root
+        group: root
+        mode: '0600'
+
+- name: Start compose stack {{ compose_stack_name }}
+  community.docker.docker_compose_v2:
+    project_src: "{{ compose_path }}/{{ compose_stack_name }}"
+    state: present
+    pull: policy

@@ -34,4 +34,4 @@
     requirements: "{{ python_requirements_file }}"
     virtualenv: "{{ python_venv_path }}"
     virtualenv_command: "python3 -m venv"
-  when: python_requirements_file | length > 0
+  when: python_venv_requirements_file | length > 0

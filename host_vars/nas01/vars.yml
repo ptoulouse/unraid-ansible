@@ -5,6 +5,13 @@ ansible_user: "root"
 # Python interpreter to use on the remote host.
 ansible_python_interpreter: "{{ python_venv_path }}/bin/python3"
 
+# Timezone.
+timezone: "America/Montreal"
+
+# Server and domain name.
+server_name: "nas01"
+domain_name: "{{ vault_domain_name }}"
+
 # Python packages to install in the virtual environment.
 python_venv_packages:
   - docker
@@ -17,3 +24,8 @@ docker_networks_list:
   - mail-relay
   - ollama
   - traefik
+
+###
+### TEMPORARY VARS UNTIL ALL  STACKS INCLUDED
+###
+traefik_network: "traefik"

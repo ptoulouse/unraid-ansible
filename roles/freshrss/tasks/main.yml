@@ -1,0 +1,9 @@
+---
+- name: Install freshRSS
+  ansible.builtin.include_role:
+    name: compose
+  vars:
+    compose_stack_name: "{{ freshrss_stack_name }}"
+    compose_stack_description: "{{ freshrss_stack_description }}"
+    compose_data_subdirs:
+      - subdir: "{{ freshrss_stack_name }}/config"
