@@ -1,0 +1,5 @@
+---
+lyrion_stack_name: "lyrion"
+lyrion_stack_description: "Lyrion music server"
+
+lyrion_data_path: "{{ compose_data_path }}/{{ lyrion_stack_name }}"

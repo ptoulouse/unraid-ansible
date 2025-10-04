@@ -1,0 +1,14 @@
+---
+- name: Install Lyrion music server
+  ansible.builtin.include_role:
+    name: compose
+  vars:
+    compose_stack_name: "{{ lyrion_stack_name }}"
+    compose_stack_description: "{{ lyrion_stack_description }}"
+    compose_data_subdirs:
+      - subdir: "{{ lyrion_stack_name }}"
+        owner: root
+        group: root
+      - subdir: "{{ lyrion_stack_name }}/lyrion_config"
+      - subdir: "{{ lyrion_stack_name }}/musicip_config"
+      - subdir: "{{ lyrion_stack_name }}/playlists"

@@ -1,0 +1,73 @@
+---
+#
+# {{ lyrion_stack_description}}
+#
+services:
+
+  # Logitech Media Server - Music Server
+  lms:
+    image: lmscommunity/lyrionmusicserver:stable
+    container_name: lms
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    volumes:
+      - {{ lyrion_data_path }}/lyrion_config:/config
+      - {{ lyrion_data_path }}/playlists:/playlist
+      - {{ music_path }}:/music:ro
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - musicip
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Music"    
+      net.unraid.docker.icon: {{ unraid_ansible_icons_url }}/lyrion-music-server.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://lms.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.lms.entrypoints: https
+      traefik.http.routers.lms.middlewares: auth-chain@file
+      traefik.http.routers.lms.rule: Host(`lms.{{ domain_name }}`)
+      traefik.http.routers.lms.service: lms
+      traefik.http.services.lms.loadbalancer.server.port: 9000
+
+  # MusicIP - Automatic music playlists creation, based on the tracks sound profile
+  musicip:
+    image: ptoulouse/musicip:latest
+    container_name: musicip
+    restart: unless-stopped
+    networks:
+      - traefik
+    ports:
+      - "10002:10002"
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    volumes:
+      - {{ lyrion_data_path }}/musicip_config:/config
+      - {{ music_path }}:/music
+      - /etc/localtime:/etc/localtime:ro
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Music"    
+      net.unraid.docker.icon: {{ unraid_ansible_icons_url }}/musicip.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://musicip.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.musicip.entrypoints: https
+      traefik.http.routers.musicip.middlewares: auth-chain@file
+      traefik.http.routers.musicip.rule: Host(`musicip.{{ domain_name }}`)
+      traefik.http.routers.musicip.service: musicip
+      traefik.http.services.musicip.loadbalancer.server.port: 10002
+
+networks:
+  traefik:
+    external: true

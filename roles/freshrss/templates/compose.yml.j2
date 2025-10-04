@@ -11,7 +11,7 @@ services:
     networks:
       - traefik
     volumes:
-      - {{ freshrss_data_path }}/config:/config
+      - {{ freshrss_data_path }}/freshrss_config:/config
     environment:
       PGID: "100"
       PUID: "99"

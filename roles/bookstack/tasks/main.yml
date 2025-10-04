@@ -11,8 +11,6 @@
         group: root
       - subdir: "{{ bookstack_stack_name }}/bookstack_config"
       - subdir: "{{ bookstack_stack_name }}/mariadb_config"
-        owner: 100
-        group: 100
       - subdir: "{{ bookstack_stack_name }}/db_dump"
         owner: root
         group: root
