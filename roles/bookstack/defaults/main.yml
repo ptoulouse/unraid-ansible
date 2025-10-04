@@ -1,0 +1,5 @@
+---
+bookstack_stack_name: "bookstack"
+bookstack_stack_description: "Bookstack - Simple Wiki software"
+
+bookstack_data_path: "{{ compose_data_path }}/{{ bookstack_stack_name }}"

@@ -1,0 +1,18 @@
+---
+- name: Install Bookstack
+  ansible.builtin.include_role:
+    name: compose
+  vars:
+    compose_stack_name: "{{ bookstack_stack_name }}"
+    compose_stack_description: "{{ bookstack_stack_description }}"
+    compose_data_subdirs:
+      - subdir: "{{ bookstack_stack_name }}"
+        owner: root
+        group: root
+      - subdir: "{{ bookstack_stack_name }}/bookstack_config"
+      - subdir: "{{ bookstack_stack_name }}/mariadb_config"
+        owner: 100
+        group: 100
+      - subdir: "{{ bookstack_stack_name }}/db_dump"
+        owner: root
+        group: root

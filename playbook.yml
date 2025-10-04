@@ -25,6 +25,10 @@
     - role: ebooks
       tags: ebooks
 
+    # Bookstack
+    - role: bookstack
+      tags: bookstack
+
     # Other services
     - role: freshrss
       tags: freshrss
