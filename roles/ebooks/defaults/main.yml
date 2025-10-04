@@ -1,0 +1,5 @@
+---
+ebooks_stack_name: "ebooks"
+ebooks_stack_description: "Book servers - Download or email ebooks to your reader"
+
+ebooks_data_path: "{{ compose_data_path }}/{{ ebooks_stack_name }}"

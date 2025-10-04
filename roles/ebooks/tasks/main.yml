@@ -1,0 +1,16 @@
+---
+- name: Install ebooks tools
+  ansible.builtin.include_role:
+    name: compose
+  vars:
+    compose_stack_name: "{{ ebooks_stack_name }}"
+    compose_stack_description: "{{ ebooks_stack_description }}"
+    compose_data_subdirs:
+      - subdir: "{{ ebooks_stack_name }}"
+        owner: root
+        group: root
+      - subdir: "{{ ebooks_stack_name }}/calibreweb_config"
+      - subdir: "{{ ebooks_stack_name }}/cops_config"
+    compose_config_files:
+      - src: "local.php.j2"
+        dest: "{{ ebooks_stack_name }}/cops_config/config/local.php"

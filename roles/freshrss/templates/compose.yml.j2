@@ -19,7 +19,7 @@ services:
     security_opt:
       - no-new-privileges:true
     labels:
-      net.unraid.docker.icon: https://github.com/walkxcode/Dashboard-Icons/raw/main/png/freshrss.png
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/freshrss.png
       net.unraid.docker.managed: composeman
       net.unraid.docker.shell: bash
       net.unraid.docker.webui: https://freshrss.{{ domain_name }}

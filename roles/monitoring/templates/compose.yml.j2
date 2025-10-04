@@ -17,7 +17,7 @@ services:
       - no-new-privileges:true
     labels:
       folder.view2: Monitoring
-      net.unraid.docker.icon: https://github.com/walkxcode/Dashboard-Icons/raw/main/png/dozzle.png
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/dozzle.png
       net.unraid.docker.managed: composeman
       net.unraid.docker.webui: https://dozzle.{{ domain_name }}
       traefik.enable: "true"
@@ -43,7 +43,7 @@ services:
       - no-new-privileges:true
     labels:
       folder.view2: Monitoring
-      net.unraid.docker.icon: https://github.com/walkxcode/Dashboard-Icons/raw/main/png/glances.png
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/glances.png
       net.unraid.docker.managed: composeman
       net.unraid.docker.shell: bash
       net.unraid.docker.webui: https://glances.{{ domain_name }}
@@ -85,7 +85,7 @@ services:
       - no-new-privileges:true
     labels:
       folder.view2: Monitoring
-      net.unraid.docker.icon: https://github.com/walkxcode/Dashboard-Icons/raw/main/png/healthchecks.png
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/healthchecks.png
       net.unraid.docker.managed: composeman
       net.unraid.docker.shell: bash
       net.unraid.docker.webui: https://healthchecks.{{ domain_name }}
@@ -119,7 +119,7 @@ services:
       - /dev/disk/by-id/ata-WDC_WD80EMZZ-11B4FB0_WD-CA036WZG:/dev/sde
     labels:
       folder.view2: Monitoring
-      net.unraid.docker.icon: https://github.com/walkxcode/Dashboard-Icons/raw/main/png/scrutiny-light.png
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/scrutiny-light.png
       net.unraid.docker.managed: composeman
       net.unraid.docker.shell: bash
       net.unraid.docker.webui: https://scrutiny.{{ domain_name }}
