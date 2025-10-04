@@ -56,3 +56,10 @@ healthchecks_secret_key: "{{ vault_healthchecks_secret_key }}"
 
 # Scrutiny.
 scrutiny_port: "8081"
+
+###
+### Boostack stack.
+###
+bookstack_db_password: "{{ vault_bookstack_db_password }}"
+bookstack_oidc_id: "{{ vault_bookstack_oidc_id }}"
+bookstack_oidc_secret: "{{ vault_bookstack_oidc_secret }}"

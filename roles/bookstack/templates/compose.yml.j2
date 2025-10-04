@@ -1,0 +1,91 @@
+---
+#
+# {{ bookstack_stack_description }}
+#
+services:
+
+  bookstack:
+    image: lscr.io/linuxserver/bookstack
+    container_name: bookstack
+    restart: unless-stopped
+    networks:
+      - internal
+      - mail-relay
+      - traefik
+    volumes:
+      - {{ bookstack_data_path }}/bookstack_config:/config
+    environment:
+      # APP_DEBUG: "true"
+      APP_LANG: fr
+      APP_URL: https://bookstack.{{ domain_name }}
+      AUTH_METHOD: oidc
+      DB_DATABASE: bookstack
+      DB_HOST: bookstack-db
+      DB_USER: bookstack
+      EXPORT_PAGE_SIZE: letter
+      DB_PASS: {{ bookstack_db_password }}
+      OIDC_NAME: Authelia
+      OIDC_DISPLAY_NAME_CLAIMS: name
+      OIDC_CLIENT_ID: {{ bookstack_oidc_id }}
+      OIDC_CLIENT_SECRET: {{ bookstack_oidc_secret }}
+      OIDC_ISSUER: https://auth.{{ domain_name }}
+      OIDC_ISSUER_DISCOVER: "true"
+      OIDC_USER_TO_GROUPS: "true"
+      OIDC_GROUPS_CLAIM: groups
+      OIDC_ADDITIONAL_SCOPES: groups
+      OIDC_REMOVE_FROM_GROUPS: "true"
+      MAIL_DRIVER: smtp
+      MAIL_FROM_NAME: Bookstack
+      MAIL_HOST: mail-relay
+      MAIL_PORT: 25
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+      WKHTMLTOPDF: /usr/bin/wkhtmltopdf
+    depends_on:
+      - bookstack-db
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Documentation and Notes"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/bookstack.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://bookstack.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.bookstack.entrypoints: https
+      traefik.http.routers.bookstack.middlewares: auth-chain@file
+      traefik.http.routers.bookstack.rule: Host(`bookstack.{{ domain_name }}`)
+      traefik.http.routers.bookstack.service: bookstack
+      traefik.http.services.bookstack.loadbalancer.server.port: 80
+
+  bookstack-db:
+    image: lscr.io/linuxserver/mariadb
+    container_name: bookstack-db
+    restart: unless-stopped
+    networks:
+      - internal
+    volumes:
+      - {{ bookstack_data_path }}/mariadb_config:/config
+    environment:
+      MYSQL_DATABASE: bookstack
+      MYSQL_PASSWORD: {{ bookstack_db_password }}
+      MYSQL_ROOT_PASSWORD: {{ bookstack_db_password }}
+      MYSQL_USER: bookstack
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Documentation and Notes"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/mariadb.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+
+networks:
+  internal:
+  mail-relay:
+    external: true
+  traefik:
+    external: true
