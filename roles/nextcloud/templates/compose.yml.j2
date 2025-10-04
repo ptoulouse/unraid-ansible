@@ -1,0 +1,36 @@
+---
+#
+# {{ compose_stack_description }}
+#
+services:
+  nextcloud-aio-mastercontainer:
+    image: ghcr.io/nextcloud-releases/all-in-one:latest
+    container_name: nextcloud-aio-mastercontainer
+    restart: unless-stopped
+    networks:
+      - nextcloud-aio
+    ports:
+      - "8083:8080"
+    environment:
+      APACHE_PORT: "11000"
+      APACHE_IP_BINDING: "0.0.0.0"
+      NEXTCLOUD_DATADIR: {{ nextcloud_path }}/data
+      NEXTCLOUD_ENABLE_DRI_DEVICE: "true"
+      NEXTCLOUD_ADDITIONAL_APKS: "imagemagick ocrmypdf tesseract-ocr-data-fra tesseract-ocr-data-eng"
+    volumes:
+      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    init: true
+    labels:
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/nextcloud.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://192.168.121.2:8083
+
+networks:
+  nextcloud-aio:
+    name: nextcloud-aio
+
+volumes:
+  nextcloud_aio_mastercontainer:
+    name: nextcloud_aio_mastercontainer

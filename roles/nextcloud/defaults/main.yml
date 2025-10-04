@@ -1,0 +1,5 @@
+---
+nextcloud_stack_name: "nextcloud"
+nextcloud_stack_description: "Nextcloud - Content collaboration platform"
+
+nextcloud_data_path: "{{ compose_data_path }}/{{ nextcloud_stack_name }}"

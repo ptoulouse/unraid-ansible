@@ -29,6 +29,10 @@
     - role: bookstack
       tags: bookstack
 
+    # Nextcloud
+    - role: nextcloud
+      tags: nextcloud
+
     # Other services
     - role: freshrss
       tags: freshrss

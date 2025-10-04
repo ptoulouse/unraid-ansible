@@ -1,0 +1,7 @@
+---
+- name: Install nextcloud
+  ansible.builtin.include_role:
+    name: compose
+  vars:
+    compose_stack_name: "{{ nextcloud_stack_name }}"
+    compose_stack_description: "{{ nextcloud_stack_description }}"
