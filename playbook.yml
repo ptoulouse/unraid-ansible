@@ -17,6 +17,10 @@
     - role: monitoring
       tags: monitoring
 
+   # E-Books
+    - role: ebooks
+      tags: ebooks
+
     # Other services
     - role: freshrss
       tags: freshrss

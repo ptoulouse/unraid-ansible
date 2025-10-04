@@ -15,6 +15,18 @@ domain_name: "{{ vault_domain_name }}"
 # Administrator password.
 admin_password: "{{ vault_admin_password }}"
 
+# Shares paths.
+backup_path: "/mnt/user/backup"
+books_path: "{{ media_path }}/libraries/books"
+media_path: "/mnt/user/media"
+music_path: "{{ media_path }}/libraries/music"
+nextcloud_path: "/mnt/user/nextcloud"
+photos_path: "/mnt/user/photos"
+
+# Icons URLs.
+homarr_labs_icons_url: "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/png/"
+unraid_ansible_icons_url: "https://github.com/ptoulouse/unraid-ansible/raw/main/icons/"
+
 # Python packages to install in the virtual environment.
 python_venv_packages:
   - docker

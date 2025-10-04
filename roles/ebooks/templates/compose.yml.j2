@@ -1,0 +1,67 @@
+---
+#
+# {{ ebooks_stack_description }}
+#
+services:
+
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web
+    container_name: calibre-web
+    restart: unless-stopped
+    networks:
+      - traefik
+    volumes:
+      - {{ ebooks_data_path }}/calibreweb_config:/config
+      - {{ books_path }}:/books
+    environment:
+      DOCKER_MODS: linuxserver/calibre-web:calibre
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/calibre-web.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://calibre-web.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.calibre-web.entrypoints: https
+      traefik.http.routers.calibre-web.middlewares: auth-chain@file
+      traefik.http.routers.calibre-web.rule: Host(`calibre-web.{{ domain_name }}`)
+      traefik.http.routers.calibre-web.service: calibre-web
+      traefik.http.services.calibre-web.loadbalancer.server.port: 8083
+
+  cops:
+    image: lscr.io/linuxserver/cops
+    container_name: cops
+    restart: unless-stopped
+    networks:
+      - traefik
+      - mail-relay
+    volumes:
+      - {{ ebooks_data_path }}/cops_config:/config
+      - {{ books_path }}:/books
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      net.unraid.docker.icon: {{ unraid_ansible_icons_url }}/cops.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: sh
+      net.unraid.docker.webui: https://cops.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.cops.entrypoints: https
+      traefik.http.routers.cops.middlewares: auth-chain@file
+      traefik.http.routers.cops.rule: Host(`cops.{{ domain_name }}`)
+      traefik.http.routers.cops.service: cops
+      traefik.http.services.cops.loadbalancer.server.port: 80
+
+networks:
+  mail-relay:
+    external: true
+  traefik:
+    external: true
