@@ -1,0 +1,67 @@
+---
+#
+# {{ plex_stack_description }}
+#
+services:
+
+  plex:
+    image: lscr.io/linuxserver/plex
+    container_name: plex
+    volumes:
+      - {{ plex_data_path }}/plex_config:/config
+      - {{ photos_path }}:/photos
+      - {{ media_path }}:{{ media_path }}:rslave
+      - /tmp:/transcode
+    devices:
+      - /dev/dri:/dev/dri
+    network_mode: host
+    labels:
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/plex.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://plex.{{ domain_name }}
+      traefik.http.routers.plex.entrypoints: https
+      traefik.http.routers.plex.middlewares: auth-chain@file
+      traefik.http.routers.plex.rule: Host(`plex.{{ domain_name }}`)
+      traefik.http.routers.plex.service: plex
+      traefik.http.services.plex.loadbalancer.server.port: 32400
+    environment:
+      PGID: "100"
+      PUID: "99"
+      VERSION: docker
+      TZ: {{ timezone }}
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+  # Tautulli - Monitoring, analytics and notifications for Plex Media Server
+  tautulli:
+    image: lscr.io/linuxserver/tautulli
+    container_name: tautulli
+    volumes:
+      - {{ plex_data_path }}/plex_config/Library/Application Support/Plex Media Server/Logs:/logs:ro
+      - {{ plex_data_path }}/tautulli_config:/config
+    networks:
+      - traefik
+    labels:
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/tautulli.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://tautulli.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.tautulli.entrypoints: https
+      traefik.http.routers.tautulli.middlewares: auth-chain@file
+      traefik.http.routers.tautulli.rule: Host(`tautulli.{{ domain_name }}`)
+      traefik.http.routers.tautulli.service: tautulli
+      traefik.http.services.tautulli.loadbalancer.server.port: 8181
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  traefik:
+    external: true
