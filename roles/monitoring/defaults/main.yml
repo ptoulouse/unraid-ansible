@@ -1,0 +1,5 @@
+---
+monitoring_stack_name: "monitoring"
+monitoring_stack_description: "Monitoring tools"
+
+monitoring_data_path: "{{ compose_data_path }}/{{ monitoring_stack_name }}"

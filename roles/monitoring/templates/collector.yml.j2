@@ -1,0 +1,10 @@
+# Version
+#
+# version specifies the version of this configuration file schema, not
+# the scrutiny binary. There is only 1 version available at the moment
+version: 1
+
+# The host id is a label used for identifying groups of disks running on the same host
+# Primiarly used for hub/spoke deployments (can be left empty if using all-in-one image).
+host:
+  id: "{{ server_name }}"

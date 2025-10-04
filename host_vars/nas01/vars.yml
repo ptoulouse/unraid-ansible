@@ -12,6 +12,9 @@ timezone: "America/Montreal"
 server_name: "nas01"
 domain_name: "{{ vault_domain_name }}"
 
+# Administrator password.
+admin_password: "{{ vault_admin_password }}"
+
 # Python packages to install in the virtual environment.
 python_venv_packages:
   - docker
@@ -25,7 +28,19 @@ docker_networks_list:
   - ollama
   - traefik
 
+# SMTP server configuration.
+smtp_server: smtp.gmail.com
+smtp_port: 587
+smtp_username: "{{ vault_smtp_username }}"
+smtp_password: "{{ vault_smtp_password }}"
+smtp_mail_from: "{{ vault_smtp_mail_from }}"
+
 ###
-### TEMPORARY VARS UNTIL ALL  STACKS INCLUDED
+### Monitoring stack.
 ###
-traefik_network: "traefik"
+
+# Healthchecks.
+healthchecks_secret_key: "{{ vault_healthchecks_secret_key }}"
+
+# Scrutiny.
+scrutiny_port: "8081"
