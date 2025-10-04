@@ -13,6 +13,10 @@
     - role: docker_networks
       tags: docker_networks
 
+    # Monitoring
+    - role: monitoring
+      tags: monitoring
+
     # Other services
     - role: freshrss
       tags: freshrss

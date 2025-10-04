@@ -1,0 +1,137 @@
+---
+#
+# {{ monitoring_stack_description }}
+#
+services:
+
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    restart: unless-stopped
+    networks:
+      - traefik
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: Monitoring
+      net.unraid.docker.icon: https://github.com/walkxcode/Dashboard-Icons/raw/main/png/dozzle.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.webui: https://dozzle.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.dozzle.entrypoints: https
+      traefik.http.routers.dozzle.middlewares: auth-chain@file
+      traefik.http.routers.dozzle.rule: Host(`dozzle.{{ domain_name }}`)
+      traefik.http.routers.dozzle.service: dozzle
+      traefik.http.services.dozzle.loadbalancer.server.port: 8080
+
+  glances:
+    image: nicolargo/glances:latest
+    container_name: glances
+    restart: unless-stopped
+    networks:
+      - traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      GLANCES_OPT: "-w"
+    privileged: true
+    pid: host
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: Monitoring
+      net.unraid.docker.icon: https://github.com/walkxcode/Dashboard-Icons/raw/main/png/glances.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://glances.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.glances.entrypoints: https
+      traefik.http.routers.glances.middlewares: auth-chain@file
+      traefik.http.routers.glances.rule: Host(`glances.{{ domain_name }}`)
+      traefik.http.routers.glances.service: glances
+      traefik.http.services.glances.loadbalancer.server.port: 61208
+
+  healthchecks:
+    image: lscr.io/linuxserver/healthchecks
+    container_name: healthchecks
+    restart: unless-stopped
+    networks:
+      - mail-relay
+      - traefik
+    volumes:
+      - {{ monitoring_data_path }}/healthchecks_config:/config
+    environment:
+      DEFAULT_FROM_EMAIL: {{ smtp_mail_from }}
+      EMAIL_HOST: mail-relay
+      EMAIL_HOST_PASSWORD: ""
+      EMAIL_HOST_USER: ""
+      EMAIL_PORT: 25
+      EMAIL_USE_TLS: "False"
+      PGID: "100"
+      PUID: "99"
+      REGENERATE_SETTINGS: "True"
+      REGISTRATION_OPEN: "False"
+      REMOTE_USER_HEADER: HTTP_REMOTE_EMAIL
+      SECRET_KEY: {{ healthchecks_secret_key }}
+      SITE_ROOT: https://healthchecks.{{ domain_name }}
+      SITE_NAME: "Homelab Healthchecks"
+      SUPERUSER_EMAIL: admin@{{ domain_name }}
+      SUPERUSER_PASSWORD: {{ admin_password }}
+      TZ: {{ timezone }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: Monitoring
+      net.unraid.docker.icon: https://github.com/walkxcode/Dashboard-Icons/raw/main/png/healthchecks.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://healthchecks.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.healthchecks.entrypoints: https
+      traefik.http.routers.healthchecks.middlewares: auth-chain@file
+      traefik.http.routers.healthchecks.rule: Host(`healthchecks.{{ domain_name }}`)
+      traefik.http.routers.healthchecks.service: healthchecks
+      traefik.http.services.healthchecks.loadbalancer.server.port: 8000
+
+  scrutiny:
+    image: ghcr.io/analogj/scrutiny:master-omnibus
+    container_name: scrutiny
+    restart: unless-stopped
+    ports:
+      - "{{ scrutiny_port | default('8080') }}:8080"
+    networks:
+      - traefik
+    volumes:
+      - /run/udev:/run/udev:ro
+      - {{ monitoring_data_path }}/scrutiny_config:/opt/scrutiny/config
+      - {{ monitoring_data_path }}/scrutiny_influxdb:/opt/scrutiny/influxdb
+    cap_add:
+      - SYS_RAWIO
+      - SYS_ADMIN
+    devices:
+      - /dev/disk/by-id/ata-Samsung_SSD_860_EVO_500GB_S59UNMFN804153R:/dev/sdf
+      - /dev/disk/by-id/nvme-WDS500G3X0C-00SJG0_20408A804512:/dev/nvme0
+      - /dev/disk/by-id/ata-WDC_WD80EDBZ-11B0ZA0_VRGJ5PSK:/dev/sdc
+      - /dev/disk/by-id/ata-WDC_WD80EMZZ-11B4FB0_WD-CA03PHHG:/dev/sdd
+      - /dev/disk/by-id/ata-WDC_WD80EMZZ-11B4FB0_WD-CA036WZG:/dev/sde
+    labels:
+      folder.view2: Monitoring
+      net.unraid.docker.icon: https://github.com/walkxcode/Dashboard-Icons/raw/main/png/scrutiny-light.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://scrutiny.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.scrutiny.entrypoints: https
+      traefik.http.routers.scrutiny.middlewares: auth-chain@file
+      traefik.http.routers.scrutiny.rule: Host(`scrutiny.{{ domain_name }}`)
+      traefik.http.routers.scrutiny.service: scrutiny
+      traefik.http.services.scrutiny.loadbalancer.server.port: 8080
+
+networks:
+  mail-relay:
+    external: true
+  traefik:
+    external: true

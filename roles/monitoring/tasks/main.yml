@@ -1,0 +1,17 @@
+---
+- name: Install Monitoring tools
+  ansible.builtin.include_role:
+    name: compose
+  vars:
+    compose_stack_name: "{{ monitoring_stack_name }}"
+    compose_stack_description: "{{ monitoring_stack_description }}"
+    compose_data_subdirs:
+      - subdir: "{{ monitoring_stack_name }}"
+        owner: root
+        group: root
+      - subdir: "{{ monitoring_stack_name }}/healthchecks_config"
+      - subdir: "{{ monitoring_stack_name }}/scrutiny_config"
+      - subdir: "{{ monitoring_stack_name }}/scrutiny_influxdb"
+    compose_config_files:
+      - src: "collector.yml.j2"
+        dest: "{{ monitoring_stack_name }}/scrutiny_config/collector.yml"
