@@ -17,7 +17,11 @@
     - role: monitoring
       tags: monitoring
 
-   # E-Books
+    # Plex
+    - role: plex
+      tags: plex
+
+    # E-Books
     - role: ebooks
       tags: ebooks
 

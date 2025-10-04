@@ -1,0 +1,5 @@
+---
+plex_stack_name: "plex"
+plex_stack_description: "Plex and Tautulli"
+
+plex_data_path: "{{ compose_data_path }}/{{ plex_stack_name }}"

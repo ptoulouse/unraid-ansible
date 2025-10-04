@@ -1,0 +1,13 @@
+---
+- name: Install Plex stack
+  ansible.builtin.include_role:
+    name: compose
+  vars:
+    compose_stack_name: "{{ plex_stack_name }}"
+    compose_stack_description: "{{ plex_stack_description }}"
+    compose_data_subdirs:
+      - subdir: "{{ plex_stack_name }}"
+        owner: root
+        group: root
+      - subdir: "{{ plex_stack_name }}/plex_config"
+      - subdir: "{{ plex_stack_name }}/tautulli_config"
