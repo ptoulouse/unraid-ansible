@@ -1,0 +1,5 @@
+---
+ollama_stack_name: "ollama"
+ollama_stack_description: "Ollama and Open-WebUI"
+
+ollama_data_path: "{{ compose_data_path }}/{{ ollama_stack_name }}"

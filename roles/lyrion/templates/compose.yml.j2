@@ -10,15 +10,15 @@ services:
     container_name: lms
     restart: unless-stopped
     network_mode: host
-    environment:
-      PGID: "100"
-      PUID: "99"
-      TZ: {{ timezone }}
     volumes:
       - {{ lyrion_data_path }}/lyrion_config:/config
       - {{ lyrion_data_path }}/playlists:/playlist
       - {{ music_path }}:/music:ro
       - /etc/localtime:/etc/localtime:ro
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
     depends_on:
       - musicip
     security_opt:
@@ -45,14 +45,14 @@ services:
       - traefik
     ports:
       - "10002:10002"
-    environment:
-      PGID: "100"
-      PUID: "99"
-      TZ: {{ timezone }}
     volumes:
       - {{ lyrion_data_path }}/musicip_config:/config
       - {{ music_path }}:/music
       - /etc/localtime:/etc/localtime:ro
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
     security_opt:
       - no-new-privileges:true
     labels:

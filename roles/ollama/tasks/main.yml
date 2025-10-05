@@ -1,0 +1,13 @@
+---
+- name: Install Ollama and Open-WebUI
+  ansible.builtin.include_role:
+    name: compose
+  vars:
+    compose_stack_name: "{{ ollama_stack_name }}"
+    compose_stack_description: "{{ ollama_stack_description }}"
+    compose_data_subdirs:
+      - subdir: "{{ ollama_stack_name }}"
+        owner: root
+        group: root
+      - subdir: "{{ ollama_stack_name }}/ollama_config"
+      - subdir: "{{ ollama_stack_name }}/webui_config"

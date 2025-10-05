@@ -33,6 +33,14 @@
     - role: nextcloud
       tags: nextcloud
 
+    # Lyrion
+    - role: lyrion
+      tags: lyrion
+
+    # Ollama and Open-WebUI
+    - role: ollama
+      tags: ollama
+
     # Other services
     - role: freshrss
       tags: freshrss

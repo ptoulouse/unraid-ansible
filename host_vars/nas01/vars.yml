@@ -63,3 +63,8 @@ scrutiny_port: "8081"
 bookstack_db_password: "{{ vault_bookstack_db_password }}"
 bookstack_oidc_id: "{{ vault_bookstack_oidc_id }}"
 bookstack_oidc_secret: "{{ vault_bookstack_oidc_secret }}"
+
+###
+### Ollama stack.
+###
+openwebui_secret_key: "{{ vault_openwebui_secret_key }}"

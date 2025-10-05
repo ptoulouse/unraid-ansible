@@ -11,6 +11,9 @@ services:
       - nextcloud-aio
     ports:
       - "8083:8080"
+    volumes:
+      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       AIO_DISABLE_BACKUP_SECTION: "true"
       APACHE_PORT: "11000"
@@ -18,9 +21,6 @@ services:
       NEXTCLOUD_DATADIR: {{ nextcloud_path }}/data
       NEXTCLOUD_ENABLE_DRI_DEVICE: "true"
       NEXTCLOUD_ADDITIONAL_APKS: "imagemagick ocrmypdf tesseract-ocr-data-fra tesseract-ocr-data-eng"
-    volumes:
-      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
-      - /var/run/docker.sock:/var/run/docker.sock:ro
     init: true
     labels:
       folder.view2: Nextcloud

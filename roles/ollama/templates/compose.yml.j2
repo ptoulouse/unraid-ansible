@@ -1,0 +1,63 @@
+---
+#
+# {{ ollama_stack_description }}
+#
+services:
+
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
+    networks:
+      - ollama
+    volumes:
+      - {{ ollama_data_path }}/ollama_config:/root/.ollama
+    tty: true
+    labels:
+      folder.view2: AI
+      net.unraid.docker.icon: {{ unraid_ansible_icons_url }}/ollama.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+
+  webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: webui
+    restart: unless-stopped
+    networks:
+      - ollama
+      - traefik
+    volumes:
+      - {{ ollama_data_path }}/webui_config:/app/backend/data
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      WEBUI_SECRET_KEY: {{ openwebui_secret_key }}
+    depends_on:
+      - ollama
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: AI
+      net.unraid.docker.icon: {{ unraid_ansible_icons_url }}/open-webui.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://webui.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.webui.entrypoints: https
+      traefik.http.routers.webui.middlewares: auth-chain@file
+      traefik.http.routers.webui.rule: Host(`webui.{{ domain_name }}`)
+      traefik.http.routers.webui.service: webui
+      traefik.http.services.webui.loadbalancer.server.port: 8080
+
+networks:
+  ollama:
+    external: true
+  traefik:
+    external: true
