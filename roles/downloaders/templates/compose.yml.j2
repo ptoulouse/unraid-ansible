@@ -1,0 +1,116 @@
+---
+#
+# {{ downloaders_stack_description }}
+#
+services:
+
+  # Deluge - Torrent downloader
+  deluge:
+    image: lscr.io/linuxserver/deluge
+    container_name: deluge
+    restart: unless-stopped
+    networks:
+      - traefik
+    ports:
+      - "8118:8118"
+    volumes:
+      - {{ downloaders_data_path }}/deluge_config:/config
+      - {{ media_path }}/torrents:{{ media_path }}/torrents
+    environment:
+      DELUGE_DAEMON_LOG_LEVEL: info
+      DELUGE_ENABLE_WEBUI_PASSWORD: "no"
+      DELUGE_WEB_LOG_LEVEL: info
+      ENABLE_PRIVOXY: "yes"
+      LAN_NETWORK: "192.168.121.0/24,172.16.0.0/16"
+      NAME_SERVERS: "1.0.0.1,1.1.1.1"
+      PGID: "100"
+      PUID: "99"
+      VPN_CLIENT: "wireguard"
+      VPN_ENABLED: "yes"
+      VPN_PASS: "aaaaa"
+      VPN_PROV: "protonvpn"
+      VPN_USER: "aaaaa+pmp"
+      TZ: "{{ timezone }}"
+    privileged: "true"
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Downloaders"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/deluge.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://deluge.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.deluge.entrypoints: "https"
+      traefik.http.routers.deluge.middlewares: "auth-chain@file"
+      traefik.http.routers.deluge.rule: "Host(`deluge.{{ domain_name }}`)"
+      traefik.http.routers.deluge.service: "deluge"
+      traefik.http.services.deluge.loadbalancer.server.port: 
+    sysctls:
+      - "net.ipv4.conf.all.src_valid_mark=1"
+
+
+  # SABnzbd - Usenet NZB downloader 
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd
+    container_name: sabnzbd
+    restart: unless-stopped
+    networks:
+      - traefik
+    volumes:
+      - {{ downloaders_data_path }}/sabnzbd_config:/config
+      - {{ media_path }}/usenet:{{ media_path }}/usenet
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Downloaders"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/sabnzbd.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://sab.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.sabnzbd.entrypoints: "https"
+      traefik.http.routers.sabnzbd.middlewares: "auth-chain@file"
+      traefik.http.routers.sabnzbd.rule: "Host(`sab.{{ domain_name }}`)"
+      traefik.http.routers.sabnzbd.service: "sabnzbd"
+      traefik.http.services.sabnzbd.loadbalancer.server.port: 8080
+
+  decypharr:
+    image: cy01/blackhole:latest
+    container_name: decypharr
+    restart: unless-stopped
+    networks:
+      - traefik
+    volumes:
+      - {{ downloaders_data_path }}/decypharr_config:/app
+      - {{ media_path }}:{{ media_path }}:rshared
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/fuse:/dev/fuse:rwm
+    labels:
+      folder.view2: "Downloaders"
+      net.unraid.docker.icon: {{ unraid_ansible_icons_url }}/decypharr.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://decypharr.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.decypharr.entrypoints: https
+      traefik.http.routers.decypharr.middlewares: auth-chain@file
+      traefik.http.routers.decypharr.rule: Host(`decypharr.{{ domain_name }}`)
+      traefik.http.routers.decypharr.service: decypharr
+      traefik.http.services.decypharr.loadbalancer.server.port: 8282
+
+networks:
+  traefik:
+    external: true

@@ -1,0 +1,5 @@
+---
+downloaders_stack_name: "downloaders"
+downloaders_stack_description: "Media downloaders"
+
+downloaders_data_path: "{{ compose_data_path }}/{{ downloaders_stack_name }}"

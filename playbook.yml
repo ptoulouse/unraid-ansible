@@ -41,6 +41,10 @@
     - role: ollama
       tags: ollama
 
+    # Downloaders
+    - role: downloaders
+      tags: downloaders
+
     # Other services
     - role: freshrss
       tags: freshrss

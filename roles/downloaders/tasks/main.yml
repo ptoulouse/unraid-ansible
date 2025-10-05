@@ -1,0 +1,16 @@
+---
+- name: Install Media downloaders apps
+  ansible.builtin.include_role:
+    name: compose
+  vars:
+    compose_stack_name: "{{ downloaders_stack_name }}"
+    compose_stack_description: "{{ downloaders_stack_description }}"
+    compose_data_subdirs:
+      - subdir: "{{ downloaders_stack_name }}"
+        owner: root
+        group: root
+      - subdir: "{{ downloaders_stack_name }}/decypharr_config"
+        owner: root
+        group: root
+      - subdir: "{{ downloaders_stack_name }}/deluge_config"
+      - subdir: "{{ downloaders_stack_name }}/sabnzbd_config"
