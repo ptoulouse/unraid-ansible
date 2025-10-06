@@ -1,0 +1,5 @@
+---
+media_managers_stack_name: "media_managers"
+media_managers_stack_description: "Media management applications"
+
+media_managers_data_path: "{{ compose_data_path }}/{{ media_managers_stack_name }}"

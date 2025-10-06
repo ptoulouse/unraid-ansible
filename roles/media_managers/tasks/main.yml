@@ -1,0 +1,20 @@
+---
+- name: Install media_managers tools
+  ansible.builtin.include_role:
+    name: compose
+  vars:
+    compose_stack_name: "{{ media_managers_stack_name }}"
+    compose_stack_description: "{{ media_managers_stack_description }}"
+    compose_data_subdirs:
+      - subdir: "{{ media_managers_stack_name }}"
+        owner: root
+        group: root
+      - subdir: "{{ media_managers_stack_name }}/lidarr_config"
+      - subdir: "{{ media_managers_stack_name }}/overseerr_config"
+      - subdir: "{{ media_managers_stack_name }}/prowlarr_config"
+      - subdir: "{{ media_managers_stack_name }}/sonarr_config"
+      - subdir: "{{ media_managers_stack_name }}/sonarr_4k_config"
+      - subdir: "{{ media_managers_stack_name }}/radarr_config"
+      - subdir: "{{ media_managers_stack_name }}/radarr_4k_config"
+      - subdir: "{{ media_managers_stack_name }}/radarr_fr_config"
+      - subdir: "{{ media_managers_stack_name }}/recyclarr_config"

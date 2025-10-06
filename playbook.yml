@@ -45,6 +45,10 @@
     - role: downloaders
       tags: downloaders
 
+    # Media Managers
+    - role: media_managers
+      tags: media_managers
+
     # Other services
     - role: freshrss
       tags: freshrss

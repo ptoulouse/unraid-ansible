@@ -1,0 +1,264 @@
+#
+# {{ media_managers_stack_description }}
+#
+services:
+
+   # Lidarr - Monitor music albums and download, sort and rename them  
+  lidarr:
+    image: lscr.io/linuxserver/lidarr
+    container_name: lidarr
+    restart: unless-stopped
+    networks:
+      - traefik
+    volumes:
+      - {{ media_managers_data_path }}/lidarr_config:/config
+      - {{ media_path }}:{{ media_path }}
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Media Managers"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/lidarr.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://lidarr.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.lidarr.entrypoints: https
+      traefik.http.routers.lidarr.middlewares: auth-chain@file
+      traefik.http.routers.lidarr.rule: Host(`lidarr.{{ domain_name }}`)
+      traefik.http.routers.lidarr.service: lidarr
+      traefik.http.services.lidarr.loadbalancer.server.port: 8686
+
+  # Overseerr - Request Management
+  overseerr:
+    image: lscr.io/linuxserver/overseerr
+    container_name: overseerr
+    restart: unless-stopped
+    networks:
+      - traefik
+    volumes:
+      - {{ media_managers_data_path }}/overseerr_config:/config
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Media Managers"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/overseerr.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://overseerr.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.overseerr.entrypoints: https
+      traefik.http.routers.overseerr.middlewares: auth-chain@file
+      traefik.http.routers.overseerr.rule: Host(`overseerr.{{ domain_name }}`)
+      traefik.http.routers.overseerr.service: overseerr
+      traefik.http.services.overseerr.loadbalancer.server.port: 5055
+
+  # Prowlarr - Indexer manager/proxy
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:develop
+    container_name: prowlarr
+    restart: unless-stopped
+    networks:
+      - traefik
+    volumes:
+      - {{ media_managers_data_path }}/prowlarr_config:/config
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Media Managers"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/prowlarr.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://prowlarr.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.prowlarr.entrypoints: https
+      traefik.http.routers.prowlarr.middlewares: auth-chain@file
+      traefik.http.routers.prowlarr.rule: Host(`prowlarr.{{ domain_name }}`)
+      traefik.http.routers.prowlarr.service: prowlarr
+      traefik.http.services.prowlarr.loadbalancer.server.port: 9696
+
+  # Radarr - Monitor movies and download, sort and rename them  
+  radarr-4k:
+    image: lscr.io/linuxserver/radarr
+    container_name: radarr-4k
+    restart: unless-stopped
+    networks:
+      - internal
+      - traefik
+    volumes:
+      - {{ media_managers_data_path }}/radarr_4k_config:/config
+      - {{ media_path }}:{{ media_path }}
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Media Managers"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/radarr.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://radarr-4k.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.radarr-4k.entrypoints: https
+      traefik.http.routers.radarr-4k.middlewares: auth-chain@file
+      traefik.http.routers.radarr-4k.rule: Host(`radarr-4k.{{ domain_name }}`)
+      traefik.http.routers.radarr-4k.service: radarr-4k
+      traefik.http.services.radarr-4k.loadbalancer.server.port: 7878
+
+  # Radarr - Monitor movies and download, sort and rename them  
+  radarr:
+    image: lscr.io/linuxserver/radarr
+    container_name: radarr
+    restart: unless-stopped
+    networks:
+      - internal
+      - traefik
+    volumes:
+      - {{ media_managers_data_path }}/radarr_config:/config
+      - {{ media_path }}:{{ media_path }}
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Media Managers"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/radarr.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://radarr.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.radarr.entrypoints: https
+      traefik.http.routers.radarr.middlewares: auth-chain@file
+      traefik.http.routers.radarr.rule: Host(`radarr.{{ domain_name }}`)
+      traefik.http.routers.radarr.service: radarr
+      traefik.http.services.radarr.loadbalancer.server.port: 7878
+
+  # Radarr - Monitor movies and download, sort and rename them  
+  radarr-fr:
+    image: lscr.io/linuxserver/radarr
+    container_name: radarr-fr
+    restart: unless-stopped
+    networks:
+      - internal
+      - traefik
+    volumes:
+      - {{ media_managers_data_path }}/radarr_fr_config:/config
+      - {{ media_path }}:{{ media_path }}
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Media Managers"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/radarr.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://radarr-fr.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.radarr-fr.entrypoints: https
+      traefik.http.routers.radarr-fr.middlewares: auth-chain@file
+      traefik.http.routers.radar-fr.rule: Host(`radarr-fr.{{ domain_name }}`)
+      traefik.http.routers.radarr-fr.service: radarr-fr
+      traefik.http.services.radarr-fr.loadbalancer.server.port: 7879
+
+  # Recyclarr - Automatically sync TRaSH Guides to your Sonarr and Radarr instances
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr
+    container_name: recyclarr
+    restart: unless-stopped
+    networks:
+      - internal
+    volumes:
+      - {{ media_managers_data_path }}/recyclarr_config:/config
+    environment:
+      TZ: {{ timezone }}
+    user: "99:100"
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Media Managers"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/recyclarr.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+
+  # Sonarr - Monitor selected TV series and download, sort and rename new episodes
+  sonarr-4k:
+    image: lscr.io/linuxserver/sonarr
+    container_name: sonarr-4k
+    restart: unless-stopped
+    networks:
+      - internal
+      - traefik
+    volumes:
+      - {{ media_managers_data_path }}/sonarr_4k_config:/config
+      - {{ media_path }}:{{ media_path }}
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Media Managers"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/sonarr.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://sonarr-4k.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.sonarr-4k.entrypoints: https
+      traefik.http.routers.sonarr-4k.middlewares: auth-chain@file
+      traefik.http.routers.sonarr-4k.rule: Host(`sonarr-4k.{{ domain_name }}`)
+      traefik.http.routers.sonarr-4k.service: sonarr-4k
+      traefik.http.services.sonarr-4k.loadbalancer.server.port: 8989
+
+  # Sonarr - Monitor selected TV series and download, sort and rename new episodes
+  sonarr:
+    image: lscr.io/linuxserver/sonarr
+    container_name: ${SONARR_CONTAINER_NAME:-sonarr}
+    restart: unless-stopped
+    networks:
+      - internal
+      - traefik
+    volumes:
+      - {{ media_managers_data_path }}/sonarr_config:/config
+      - {{ media_path }}:{{ media_path }}
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Media Managers"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/sonarr.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://sonarr.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.sonarr.entrypoints: https
+      traefik.http.routers.sonarr.middlewares: auth-chain@file
+      traefik.http.routers.sonarr.rule: Host(`sonarr.{{ domain_name }}`)
+      traefik.http.routers.sonarr.service: sonarr
+      traefik.http.services.sonarr.loadbalancer.server.port: 8989
+
+networks:
+  internal:
+  traefik:
+    external: true
