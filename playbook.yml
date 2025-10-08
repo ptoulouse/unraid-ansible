@@ -13,6 +13,10 @@
     - role: docker_networks
       tags: docker_networks
 
+    # Base services
+    - role: base_services
+      tags: base_services
+
     # Monitoring
     - role: monitoring
       tags: monitoring

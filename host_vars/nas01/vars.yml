@@ -12,7 +12,8 @@ timezone: "America/Montreal"
 server_name: "nas01"
 domain_name: "{{ vault_domain_name }}"
 
-# Administrator password.
+# Administrator email and password.
+admin_email: "{{ vault_admin_email }}"
 admin_password: "{{ vault_admin_password }}"
 
 # Shares paths.
@@ -40,16 +41,35 @@ docker_networks_list:
   - ollama
   - traefik
 
-# SMTP server configuration.
+# Authelia.
+authelia_domain: "{{ vault_domain_name }}"
+authelia_hostname: "auth"
+authelia_identity_jwt_secret: "{{ vault_authelia_identity_jwt_secret }}"
+authelia_oidc_hmac_secret: "{{ vault_authelia_oidc_hmac_secret }}"
+authelia_identity_providers_oidc_jwks_key: "{{ vault_authelia_identity_providers_oidc_jwks_key }}"
+authelia_smtp_address: "smtp://mail-relay:25"
+authelia_smtp_sender: "Authelia <{{ smtp_mail_from }}>"
+authelia_storage_encryption_key: "{{ vault_authelia_storage_encryption_key }}"
+
+# Cloudflare DDNS.
+cloudflare_api_token: "{{ vault_cloudflare_api_token }}"
+
+# Mail relay.
 smtp_server: smtp.gmail.com
 smtp_port: 587
 smtp_username: "{{ vault_smtp_username }}"
 smtp_password: "{{ vault_smtp_password }}"
 smtp_mail_from: "{{ vault_smtp_mail_from }}"
 
-###
-### Monitoring stack.
-###
+# LLDAP.
+lldap_admin_password: "{{ vault_lldap_admin_password }}"
+lldap_base_dn: "dc={{ domain_name.split('.')[0] }},dc={{ domain_name.split('.')[1] }}"
+lldap_jwt_secret: "{{ vault_lldap_jwt_secret }}"
+lldap_readonly_password: "{{ vault_lldap_readonly_password }}"
+
+# Watchtower.
+watchtower_api_token: "{{ vault_watchtower_api_token }}"
+watchtower_port: "8082"
 
 # Healthchecks.
 healthchecks_secret_key: "{{ vault_healthchecks_secret_key }}"
@@ -57,14 +77,23 @@ healthchecks_secret_key: "{{ vault_healthchecks_secret_key }}"
 # Scrutiny.
 scrutiny_port: "8081"
 
-###
-### Boostack stack.
-###
+# Boostack.
 bookstack_db_password: "{{ vault_bookstack_db_password }}"
 bookstack_oidc_id: "{{ vault_bookstack_oidc_id }}"
 bookstack_oidc_secret: "{{ vault_bookstack_oidc_secret }}"
+bookstack_oidc_secret_pbkdf2: "{{ vault_bookstack_oidc_secret_pbkdf2 }}"
 
-###
-### Ollama stack.
-###
+# Nextcloud.
+nextcloud_oidc_id: "{{ vault_nextcloud_oidc_id }}"
+nextcloud_oidc_secret: "{{ vault_nextcloud_oidc_secret }}"
+
+# Ollama.
 openwebui_secret_key: "{{ vault_openwebui_secret_key }}"
+
+# Traefik.
+traefik_acme_email: "{{ admin_email }}"
+traefik_cloudflare_api_token: "{{ vault_cloudflare_api_token }}"
+traefik_domain: "{{ domain_name }}"
+traefik_forwardauth_address: "http://authelia:9091/api/verify?rd=https://auth.{{ domain_name }}"
+traefik_hosts: "{{ vault_traefik_hosts }}"
+traefik_network: "traefik"

@@ -32,6 +32,7 @@
     owner: "{{ item.owner | default('nobody') }}"
     group: "{{ item.group | default('users') }}"
     mode: "{{ item.mode | default('0640') }}"
+    lstrip_blocks: true
   loop: "{{ compose_config_files }}"
 
 - name: Install compose file for {{ compose_stack_name }}

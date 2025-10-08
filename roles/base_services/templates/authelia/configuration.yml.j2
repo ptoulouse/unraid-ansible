@@ -1,0 +1,204 @@
+---
+###############################################################################
+#                           Authelia Configuration                            #
+###############################################################################
+
+# The theme to display: light, dark, grey, auto.
+theme: light
+
+# Default redirection URL
+# default_redirection_url: https://home.example.com/
+
+#
+# Server Configuration
+#
+server:
+  address: tcp://:9091
+
+#
+# Log Configuration
+#
+log:
+  # Level of verbosity for logs: info, debug, trace.
+  level: info
+
+#
+# TOTP Configuration
+#
+totp:
+  issuer: "{{ authelia_domain }}"
+
+#
+# Identity Validation Configuration
+#
+identity_validation:
+  reset_password:
+    jwt_secret: "{{ authelia_identity_jwt_secret }}"
+
+#
+# NTP Configuration
+#
+# ntp:
+#  disable_failure: false
+
+#
+# Authentication Backend Provider Configuration
+#
+authentication_backend:
+  password_reset:
+    # Disable both the HTML element and the API for reset password functionality.
+    disable: true
+
+  ## The amount of time to wait before we refresh data from the authentication backend.
+  refresh_interval: 1m
+
+  #
+  # LDAP (Authentication Provider)
+  #
+  ldap:
+    address: "ldap://lldap:3890"
+    tls:
+      skip_verify: true
+    base_dn: "{{ lldap_base_dn }}"
+    additional_users_dn: ou=people
+    users_filter: "(&({username_attribute}={input})(objectClass=person))"
+    additional_groups_dn: ou=groups
+    groups_filter: "(member={dn})"
+    user: "uid=readonly,ou=people,{{ lldap_base_dn }}"
+    password: "{{ lldap_readonly_password }}"
+    attributes:
+      username: uid
+      display_name: displayName
+      mail: mail
+      group_name: cn
+
+#
+# Password Policy Configuration.
+#
+password_policy:
+  zxcvbn:
+    enabled: false
+    min_score: 3
+
+# Definitions
+definitions:
+  network:
+    internal:
+      - '192.168.0.0/16'
+      - '172.16.0.0/12'
+
+#
+# Access Control Configuration
+#
+access_control:
+  default_policy: deny
+
+  rules:
+    - domain:
+        - "auth.{{ domain_name }}"
+        - "plex.{{ domain_name }}"
+        - "nextcloud.{{ domain_name }}"
+      policy: bypass
+    - domain:
+        - "homepage.{{ domain_name }}"
+      resources:
+        - '^/site.webmanifest.*'
+      policy: bypass
+    - domain:
+        - "healthchecks.{{ domain_name }}"
+      resources:
+        - '^/ping/.+'
+      policy: bypass
+    - domain:
+        - "calibre-web.{{ domain_name }}"
+        - "cops.{{ domain_name }}"
+      subject:
+        - group:ebooks_users
+      policy: one_factor
+    - domain:
+        - '*.{{ domain_name }}'
+      subject:
+        - group:admin
+      policy: two_factor
+
+#
+# Session Provider Configuration
+#
+session:
+  # The time before the cookie expires and the session is destroyed if remember me IS NOT selected.
+  expiration: 1h
+
+  ## The inactivity time before the session is reset.
+  inactivity: 15m
+
+  ## The time before the cookie expires and the session is destroyed if remember me IS selected.
+  ## Value of -1 disables remember me.
+  remember_me: 1M
+
+  cookies:
+    - domain: "{{ authelia_domain }}"
+      authelia_url: "https://{{ authelia_hostname }}.{{ authelia_domain }}"
+
+#
+# Storage Provider Configuration
+#
+storage:
+  encryption_key: "{{ authelia_storage_encryption_key }}"
+  #
+  # Local (Storage Provider)
+  #
+  local:
+    path: /config/db.sqlite3
+
+#
+# Notification Provider
+#
+## Notifications are sent to users when they require a password reset, a Webauthn registration or a TOTP registration.
+## The available providers are: filesystem, smtp. You must use only one of these providers.
+notifier:
+  smtp:
+    address: "{{ authelia_smtp_address }}"
+    sender: "{{ authelia_smtp_sender }}"
+    disable_require_tls: true
+
+#
+# Identity Providers
+#
+identity_providers:
+  oidc:
+    hmac_secret: "{{ authelia_oidc_hmac_secret }}"
+    jwks:
+      - key: |
+          {{ authelia_identity_providers_oidc_jwks_key | indent(width=10) }}
+    clients:
+      - client_id: "{{ bookstack_oidc_id }}"
+        client_name: 'BookStack'
+        client_secret: "{{ bookstack_oidc_secret_pbkdf2 }}"
+        public: "false"
+        redirect_uris:
+          - 'https://bookstack.{{ domain_name }}/oidc/callback'
+        scopes:
+          - 'openid'
+          - 'groups'
+          - 'email'
+          - 'profile'
+        authorization_policy: 'two_factor'
+        userinfo_signed_response_alg: 'none'
+      - client_id: "{{ nextcloud_oidc_id }}"
+        client_name: 'Nextcloud'
+        client_secret: "{{ nextcloud_oidc_secret }}"
+        public: "false"
+        redirect_uris:
+          - 'https://nextcloud.{{ domain_name }}/apps/user_oidc/code'
+        scopes:
+          - 'openid'
+          - 'groups'
+          - 'email'
+          - 'profile'
+        authorization_policy: 'two_factor'
+        consent_mode: 'implicit'
+        require_pkce: "true"
+        pkce_challenge_method: 'S256'
+        userinfo_signed_response_alg: 'none'
+        token_endpoint_auth_method: 'client_secret_post'
+...

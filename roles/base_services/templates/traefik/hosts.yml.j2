@@ -1,0 +1,20 @@
+---
+http:
+  routers:
+    {% for host in traefik_hosts %}
+    {{ host.name }}:
+      entryPoints:
+        - {{ host.entrypoint | default("https") }}
+      middlewares:
+        - {{ host.middleware | default("auth-chain") }}
+      rule: {{ host.rule }}
+      service: {{ host.name }}
+    {% endfor %}
+
+  services:
+    {% for host in traefik_hosts %}
+    {{ host.name }}:
+      loadBalancer:
+        servers:
+          - url: {{ host.url }}
+    {% endfor %}

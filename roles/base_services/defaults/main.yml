@@ -1,0 +1,5 @@
+---
+base_services_stack_name: "base_services"
+base_services_stack_description: "Base services for other applications"
+
+base_services_data_path: "{{ compose_data_path }}/{{ base_services_stack_name }}"

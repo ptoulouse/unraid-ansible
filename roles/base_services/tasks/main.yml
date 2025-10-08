@@ -1,0 +1,30 @@
+---
+- name: Install base services
+  ansible.builtin.include_role:
+    name: compose
+  vars:
+    compose_stack_name: "{{ base_services_stack_name }}"
+    compose_stack_description: "{{ base_services_stack_description }}"
+    compose_data_subdirs:
+      - subdir: "{{ base_services_stack_name }}"
+        owner: root
+        group: root
+      - subdir: "{{ base_services_stack_name }}/authelia_config"
+      - subdir: "{{ base_services_stack_name }}/lldap_config"
+      - subdir: "{{ base_services_stack_name }}/traefik_config"
+        owner: root
+        group: root
+      - subdir: "{{ base_services_stack_name }}/traefik_config/rules"
+        owner: root
+        group: root
+    compose_config_files:
+      - src: "authelia/configuration.yml.j2"
+        dest: "{{ base_services_stack_name }}/authelia_config/configuration.yml"
+      - src: "traefik/traefik.yml.j2"
+        dest: "{{ base_services_stack_name }}/traefik_config/traefik.yml"
+      - src: "traefik/hosts.yml.j2"
+        dest: "{{ base_services_stack_name }}/traefik_config/rules/hosts.yml"
+      - src: "traefik/middlewares.yml.j2"
+        dest: "{{ base_services_stack_name }}/traefik_config/rules/middlewares.yml"
+      - src: "traefik/tls-options.yml.j2"
+        dest: "{{ base_services_stack_name }}/traefik_config/rules/tls-options.yml"
