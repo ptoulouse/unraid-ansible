@@ -1,0 +1,13 @@
+---
+- name: Install Dashboards
+  ansible.builtin.include_role:
+    name: compose
+  vars:
+    compose_stack_name: "{{ dashboards_stack_name }}"
+    compose_stack_description: "{{ dashboards_stack_description }}"
+    compose_data_subdirs:
+      - subdir: "{{ dashboards_stack_name }}"
+        owner: root
+        group: root
+      - subdir: "{{ dashboards_stack_name }}/heimdall_config"
+      - subdir: "{{ dashboards_stack_name }}/homepage_config"

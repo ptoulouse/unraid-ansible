@@ -37,6 +37,7 @@ python_venv_packages:
 
 # List of external docker networks to create.
 docker_networks_list:
+  - docker-proxy
   - mail-relay
   - ollama
   - traefik

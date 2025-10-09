@@ -68,7 +68,7 @@ log:
 providers:
   docker:
     exposedByDefault: false
-    endpoint:  "unix:///var/run/docker.sock"
+    endpoint:  "tcp://docker-proxy:2375"
     network: "{{ traefik_network }}"
   file:
     directory: /config/rules # Directory for dynamic configurations

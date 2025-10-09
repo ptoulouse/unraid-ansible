@@ -1,0 +1,5 @@
+---
+dashboards_stack_name: "dashboards"
+dashboards_stack_description: "Dashboards for managing and accessing various services."
+
+dashboards_data_path: "{{ compose_data_path }}/{{ dashboards_stack_name }}"

@@ -53,6 +53,10 @@
     - role: media_managers
       tags: media_managers
 
+    # Dashboards
+    - role: dashboards
+      tags: dashboards
+
     # Other services
     - role: freshrss
       tags: freshrss

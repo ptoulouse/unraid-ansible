@@ -1,0 +1,66 @@
+#
+# {{ dashboards_stack_description }}
+#
+services:
+  
+  heimdall:
+    image: ghcr.io/linuxserver/heimdall
+    container_name: heimdall
+    restart: unless-stopped
+    networks:
+      - traefik
+    volumes:
+      - {{ dashboards_data_path }}/heimdall_config:/config
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Dashboards"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/heimdall-light.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://heimdall.{{ domain_name}}
+      traefik.enable: "true"
+      traefik.http.routers.heimdall.entrypoints: https
+      traefik.http.routers.heimdall.middlewares: auth-chain@file
+      traefik.http.routers.heimdall.rule: Host(`heimdall.{{ domain_name }}`)
+      traefik.http.routers.heimdall.service: heimdall
+      traefik.http.services.heimdall.loadbalancer.server.port: 80
+      
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    networks:
+      - docker-proxy
+      - traefik
+    volumes:
+      - {{ dashboards_data_path }}/homepage_config:/app/config
+    environment:
+      PGID: "100"
+      PUID: "99"
+      TZ: {{ timezone }}
+      HOMEPAGE_ALLOWED_HOSTS: homepage.{{ domain_name }}
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      folder.view2: "Dashboards"
+      net.unraid.docker.icon: {{ homarr_labs_icons_url }}/homepage.png
+      net.unraid.docker.managed: composeman
+      net.unraid.docker.shell: bash
+      net.unraid.docker.webui: https://homepage.{{ domain_name }}
+      traefik.enable: "true"
+      traefik.http.routers.homepage.entrypoints: https
+      traefik.http.routers.homepage.middlewares: auth-chain@file
+      traefik.http.routers.homepage.rule: Host(`homepage.{{ domain_name }}`)
+      traefik.http.routers.homepage.service: homepage
+      traefik.http.services.homepage.loadbalancer.server.port: 3000
+
+networks:
+  docker-proxy:
+    external: true
+  traefik:
+    external: true
