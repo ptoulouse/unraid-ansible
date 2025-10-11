@@ -9,10 +9,13 @@ services:
     container_name: dozzle
     restart: unless-stopped
     networks:
+      - docker-proxy
       - traefik
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      DOCKER_HOST: "tcp://docker-proxy:2375"
     security_opt:
       - no-new-privileges:true
     labels:
@@ -32,10 +35,12 @@ services:
     container_name: glances
     restart: unless-stopped
     networks:
+      - docker-proxy
       - traefik
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
+      DOCKER_HOST: "tcp://docker-proxy:2375"
       GLANCES_OPT: "-w"
     privileged: true
     pid: host
@@ -131,6 +136,8 @@ services:
       traefik.http.services.scrutiny.loadbalancer.server.port: 8080
 
 networks:
+  docker-proxy:
+    external: true
   mail-relay:
     external: true
   traefik:

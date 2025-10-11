@@ -229,8 +229,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro # Mounted as read only
       - /etc/localtime:/etc/localtime:ro
     environment:
-      - CONTAINERS=1 # Allow access to viewing containers
-      - POST=0 # Disallow any POST operations (effectively read-only)
+      CONTAINERS: "1" # Allow access to viewing containers
+      INFO: "1" # Allow access to /info endpoint
+      POST: "0" # Disallow any POST operations (effectively read-only)
     labels:
       net.unraid.docker.icon: {{ homarr_labs_icons_url }}/docker-moby.png
       net.unraid.docker.managed: composeman
