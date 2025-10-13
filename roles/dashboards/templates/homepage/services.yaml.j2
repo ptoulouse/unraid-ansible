@@ -1,0 +1,253 @@
+---
+- Médias:
+  - Plex:
+      icon: plex.png
+      href: https://plex.{{ domain_name }}
+      description: Plex Media Server
+      server: docker-mtl
+      container: plex
+      widget:
+        type: plex
+        url: http://{{ server_ip_address }}:32400
+        key: {{ plex_api_key }}
+  - Tautulli:
+      icon: tautulli.png
+      href: https://tautulli.{{ domain_name }}
+      description: Statistiques pour Plex
+      server: docker-mtl
+      container: tautulli
+      widget:
+        type: tautulli
+        url: http://tautulli:8181
+        key: "{{ tautulli_api_key }}"
+
+- Musique:
+  - Logitech Media Server:
+      icon: {{ unraid_ansible_icons_url }}/lyrion-music-server.png
+      href: https://lms.{{ domain_name }}
+      description: Serveur de musique
+      server: docker-mtl
+      container: lms
+  - MusicIP:
+      icon: {{ unraid_ansible_icons_url }}/musicip.png
+      href: https://musicip.{{ domain_name }}
+      description: Listes de lectures
+      server: docker-mtl
+      container: musicip
+  - Volumio:
+      icon: volumio.png
+      href: https://volumio.{{ domain_name }}
+      description: piCorePlayer
+
+- Gestion des médias:
+  - Overseerr:
+      icon: overseerr.png
+      href: https://overseerr.{{ domain_name }}
+      description: Demandes de films ou séries TV
+      server: docker-mtl
+      container: overseerr
+      widget:
+        type: overseerr
+        url: http://overseerr:5055
+        key: "{{ overseerr_api_key }}"
+  - Lidarr:
+      icon: lidarr.png
+      href: https://lidarr.{{ domain_name }}
+      description: Gestionnaire de musique
+      server: docker-mtl
+      container: lidarr
+      widget:
+        type: lidarr
+        url: http://lidarr:8686
+        key: "{{ lidarr_api_key }}"
+  - Radarr:
+      icon: radarr.png
+      href: http://radarr.{{ domain_name }}
+      description: Gestionnaire de films
+      server: docker-mtl
+      container: radarr
+      widget:
+        type: radarr
+        url: http://radarr:7878
+        key: "{{ radarr_api_key }}"
+  - Radarr FR:
+      icon: radarr.png
+      href: http://radarr-fr.{{ domain_name }}
+      description: Gestionnaire de films
+      server: docker-mtl
+      container: radarr-fr
+      widget:
+        type: radarr
+        url: http://radarr-fr:7878
+        key: "{{ radarr_fr_api_key }}"
+  - Radarr 4K:
+      icon: radarr.png
+      href: http://radarr-4k.{{ domain_name }}
+      description: Gestionnaire de films
+      server: docker-mtl
+      container: radarr-4k
+      widget:
+        type: radarr
+        url: http://radarr-4k:7878
+        key: "{{ radarr_4k_api_key }}"
+  - Sonarr:
+      icon: sonarr.png
+      href: https://sonarr.{{ domain_name }}
+      description: Gestionnaire de téléséries
+      server: docker-mtl
+      container: sonarr
+      widget:
+        type: sonarr
+        url: http://sonarr:8989
+        key: "{{ sonarr_api_key }}"
+  - Sonarr 4K:
+      icon: sonarr.png
+      href: https://sonarr-4k.{{ domain_name }}
+      description: Gestionnaire de téléséries
+      server: docker-mtl
+      container: sonarr-4k
+      widget:
+        type: sonarr
+        url: http://sonarr-4k:8989
+        key: "{{ sonarr_4k_api_key }}"
+- Gestion des téléchargements:
+  - Prowlarr:
+      icon: prowlarr.png
+      href: https://prowlarr.{{ domain_name }}
+      description: Gestionnaire/proxy pour indexeurs
+      server: docker-mtl
+      container: prowlarr
+      widget:
+        type: prowlarr
+        url: http://prowlarr:9696
+        key: "{{ prowlarr_api_key }}"
+  - SABnzbd:
+      icon: sabnzbd.png
+      href: https://sabnzbd.{{ domain_name }}
+      description: Téléchargements NZB
+      server: docker-mtl
+      container: sabnzbd
+      widget:
+        type: sabnzbd
+        url: http://sabnzbd:8080
+        key: "{{ sabnzbd_api_key }}"
+  - Deluge:
+      icon: deluge.png
+      href: https://deluge.{{ domain_name }}
+      description: Téléchargements BitTorrent
+      server: docker-mtl
+      container: deluge
+      widget:
+        type: deluge
+        url: http://deluge:8112
+        username: pierre
+        password: ""
+
+- Systèmes:
+  - Traefik:
+      icon: traefik.png
+      href: https://traefik.{{ domain_name }}
+      description: Serveur mandataire inverse
+      server: docker-mtl
+      container: traefik
+      widget:
+        type: traefik
+        url: http://traefik:8080
+  - Watchtower:
+      icon: watchtower.png
+      description: Mise à jour automatique
+      server: docker-mtl
+      container: watchtower
+      widget:
+        type: watchtower
+        url: http://{{ server_ip_address }}:8082
+        key: "{{ watchtower_api_token }}"
+
+- Monitoring:
+  - Dozzle:
+      icon: dozzle.png
+      href: https://dozzle.{{ domain_name }}
+      description: Log Docker
+      server: docker-mtl
+      container: dozzle
+  - Glances:
+      icon: glances.png
+      href: glances
+      description: Métriques système et Docker
+      server: docker-mtl
+      container: glances
+  - Healthchecks:
+      icon: healthchecks.png
+      href: https://healthchecks.{{ domain_name }}
+      description: Surveillance des tâches
+      server: docker-mtl
+      container: healthchecks
+  - Scrutiny:
+      icon: scrutiny-light.png
+      href: https://scrutiny.{{ domain_name }}
+      description: Surveillance des disques
+      server: docker-mtl
+      container: scrutiny
+      widget:
+        type: scrutiny
+        url: http://scrutiny:8080
+
+- Gestion des utilisateurs:
+  - LLDAP:
+      icon: {{ unraid_ansible_icons_url }}/ldap.png
+      href: https://lldap.{{ domain_name }}
+      description: Gestion des utilisateurs
+      server: docker-mtl
+      container: lldap
+
+- Infrastructure:
+  - nas01:
+      icon: unraid.png
+      href: https://nas01.{{ domain_name }}
+      description: Serveur Unraid
+  - Routeur:
+      icon: asus.png
+      href: https://router.{{ domain_name }}
+      description: Routeur Asus
+
+- Services:
+  - Nextcloud:
+      icon: nextcloud.png
+      href: https://nextcloud.{{ domain_name }}
+      description: Cloud privé
+      server: docker-mtl
+      container: nextcloud-aio-nextcloud
+  - Calibre Web:
+      icon: calibre-web.png
+      href: https://calibre-web.{{ domain_name }}
+      description: Livres électroniques
+      server: docker-mtl
+      container: calibre-web
+  - Cops:
+      icon: calibre.png
+      href: https://cops.{{ domain_name }}
+      description: Livres électroniques
+      server: docker-mtl
+      container: cops
+  - BookStack:
+      icon: bookstack.png
+      href: https://bookstack.{{ domain_name }}
+      description: Documentation
+      server: docker-mtl
+      container: bookstack
+  - Freshrss:
+      icon: freshrss.png
+      href: https://freshrss.{{ domain_name }}
+      description: Lecteur RSS
+      server: docker-mtl
+      container: freshrss
+
+- Infrastructure Val-Morin:
+  - nas02:
+      icon: unraid.png
+      href: https://nas02.{{ domain_name }}
+      description: Serveur Unraid
+  - VoIP:
+      icon: voip-ms.png
+      href: http://192.168.40.6
+      description: Grandstream VoIP

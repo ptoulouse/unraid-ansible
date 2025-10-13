@@ -1,0 +1,17 @@
+---
+- resources:
+    label: nas01
+    cpu: true
+    memory: true
+
+- search:
+    provider: google # google, duckduckgo, bing, baidu or custom
+    target: _blank
+
+- openmeteo:
+    label: Montréal
+    latitude: 45.492846
+    longitude: -73.624842
+    timezone: America/Montreal
+    units: metric
+    cache: 5 # Time in minutes to cache API responses, to stay within limits

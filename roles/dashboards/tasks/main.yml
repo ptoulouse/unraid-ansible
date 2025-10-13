@@ -11,3 +11,14 @@
         group: root
       - subdir: "{{ dashboards_stack_name }}/heimdall_config"
       - subdir: "{{ dashboards_stack_name }}/homepage_config"
+    compose_config_files:
+      - src: "homepage/bookmarks.yaml.j2"
+        dest: "{{ dashboards_stack_name }}/homepage_config/bookmarks.yml"
+      - src: "homepage/docker.yaml.j2"
+        dest: "{{ dashboards_stack_name }}/homepage_config/docker.yaml"
+      - src: "homepage/services.yaml.j2"
+        dest: "{{ dashboards_stack_name }}/homepage_config/services.yaml"
+      - src: "homepage/settings.yaml.j2"
+        dest: "{{ dashboards_stack_name }}/homepage_config/settings.yaml"
+      - src: "homepage/widgets.yaml.j2"
+        dest: "{{ dashboards_stack_name }}/homepage_config/widgets.yaml"

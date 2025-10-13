@@ -45,7 +45,7 @@ services:
       traefik.http.routers.deluge.middlewares: "auth-chain@file"
       traefik.http.routers.deluge.rule: "Host(`deluge.{{ domain_name }}`)"
       traefik.http.routers.deluge.service: "deluge"
-      traefik.http.services.deluge.loadbalancer.server.port: 
+      traefik.http.services.deluge.loadbalancer.server.port: 8112
     sysctls:
       - "net.ipv4.conf.all.src_valid_mark=1"
 

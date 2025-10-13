@@ -176,7 +176,7 @@ services:
       traefik.http.routers.radarr-fr.middlewares: auth-chain@file
       traefik.http.routers.radar-fr.rule: Host(`radarr-fr.{{ domain_name }}`)
       traefik.http.routers.radarr-fr.service: radarr-fr
-      traefik.http.services.radarr-fr.loadbalancer.server.port: 7879
+      traefik.http.services.radarr-fr.loadbalancer.server.port: 7878
 
   # Recyclarr - Automatically sync TRaSH Guides to your Sonarr and Radarr instances
   recyclarr:

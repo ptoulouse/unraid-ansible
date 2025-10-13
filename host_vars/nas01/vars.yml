@@ -9,8 +9,9 @@ ansible_python_interpreter: "{{ python_venv_path }}/bin/python3"
 timezone: "America/Montreal"
 
 # Server and domain name.
-server_name: "nas01"
 domain_name: "{{ vault_domain_name }}"
+server_ip_address: "{{ vault_server_ip_address }}"
+server_name: "nas01"
 
 # Administrator email and password.
 admin_email: "{{ vault_admin_email }}"
@@ -52,8 +53,26 @@ authelia_smtp_address: "smtp://mail-relay:25"
 authelia_smtp_sender: "Authelia <{{ smtp_mail_from }}>"
 authelia_storage_encryption_key: "{{ vault_authelia_storage_encryption_key }}"
 
+# Boostack.
+bookstack_db_password: "{{ vault_bookstack_db_password }}"
+bookstack_oidc_id: "{{ vault_bookstack_oidc_id }}"
+bookstack_oidc_secret: "{{ vault_bookstack_oidc_secret }}"
+bookstack_oidc_secret_pbkdf2: "{{ vault_bookstack_oidc_secret_pbkdf2 }}"
+
 # Cloudflare DDNS.
 cloudflare_api_token: "{{ vault_cloudflare_api_token }}"
+
+# Healthchecks.
+healthchecks_secret_key: "{{ vault_healthchecks_secret_key }}"
+
+# Lidar.
+lidarr_api_key: "{{ vault_lidarr_api_key }}"
+
+# LLDAP.
+lldap_admin_password: "{{ vault_lldap_admin_password }}"
+lldap_base_dn: "dc={{ domain_name.split('.')[0] }},dc={{ domain_name.split('.')[1] }}"
+lldap_jwt_secret: "{{ vault_lldap_jwt_secret }}"
+lldap_readonly_password: "{{ vault_lldap_readonly_password }}"
 
 # Mail relay.
 smtp_server: smtp.gmail.com
@@ -62,34 +81,39 @@ smtp_username: "{{ vault_smtp_username }}"
 smtp_password: "{{ vault_smtp_password }}"
 smtp_mail_from: "{{ vault_smtp_mail_from }}"
 
-# LLDAP.
-lldap_admin_password: "{{ vault_lldap_admin_password }}"
-lldap_base_dn: "dc={{ domain_name.split('.')[0] }},dc={{ domain_name.split('.')[1] }}"
-lldap_jwt_secret: "{{ vault_lldap_jwt_secret }}"
-lldap_readonly_password: "{{ vault_lldap_readonly_password }}"
-
-# Watchtower.
-watchtower_api_token: "{{ vault_watchtower_api_token }}"
-watchtower_port: "8082"
-
-# Healthchecks.
-healthchecks_secret_key: "{{ vault_healthchecks_secret_key }}"
-
-# Scrutiny.
-scrutiny_port: "8081"
-
-# Boostack.
-bookstack_db_password: "{{ vault_bookstack_db_password }}"
-bookstack_oidc_id: "{{ vault_bookstack_oidc_id }}"
-bookstack_oidc_secret: "{{ vault_bookstack_oidc_secret }}"
-bookstack_oidc_secret_pbkdf2: "{{ vault_bookstack_oidc_secret_pbkdf2 }}"
-
 # Nextcloud.
 nextcloud_oidc_id: "{{ vault_nextcloud_oidc_id }}"
 nextcloud_oidc_secret: "{{ vault_nextcloud_oidc_secret }}"
 
-# Ollama.
+# Open-WebUI.
 openwebui_secret_key: "{{ vault_openwebui_secret_key }}"
+
+# Overseerr.
+overseerr_api_key: "{{ vault_overseerr_api_key }}"
+
+# Plex.
+plex_api_key: "{{ vault_plex_api_key }}"
+
+# Prowlarr.
+prowlarr_api_key: "{{ vault_prowlarr_api_key }}"
+
+# Radarr.
+radarr_api_key: "{{ vault_radarr_api_key }}"
+radarr_fr_api_key: "{{ vault_radarr_fr_api_key }}"
+radarr_4k_api_key: "{{ vault_radarr_4k_api_key }}"
+
+# SABnzbd.
+sabnzbd_api_key: "{{ vault_sabnzbd_api_key }}"
+
+# Sonarr.
+sonarr_api_key: "{{ vault_sonarr_api_key }}"
+sonarr_4k_api_key: "{{ vault_sonarr_4k_api_key }}"
+
+# Scrutiny.
+scrutiny_port: "8081"
+
+# Tautulli.
+tautulli_api_key: "{{ vault_tautulli_api_key }}"
 
 # Traefik.
 traefik_acme_email: "{{ admin_email }}"
@@ -98,3 +122,7 @@ traefik_domain: "{{ domain_name }}"
 traefik_forwardauth_address: "http://authelia:9091/api/verify?rd=https://auth.{{ domain_name }}"
 traefik_hosts: "{{ vault_traefik_hosts }}"
 traefik_network: "traefik"
+
+# Watchtower.
+watchtower_api_token: "{{ vault_watchtower_api_token }}"
+watchtower_port: "8082"
