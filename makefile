@@ -1,9 +1,9 @@
 export PATH := $(PWD)/venv/bin:$(PATH)
 
 setup:
-	python3 -m venv venv
-	pip3 install -r pip_requirements.txt
-	ansible-galaxy install -r galaxy_requirements.yml
+	python3 -m venv .venv
+	.venv/bin/pip3 install -r pip_requirements.txt
+	.venv/bin/ansible-galaxy install -r galaxy_requirements.yml
 
 gitinit:
 	cp git_hooks/pre-commit .git/hooks/pre-commit
