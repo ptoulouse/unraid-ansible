@@ -6,7 +6,7 @@ services:
 
   # Deluge - Torrent downloader
   deluge:
-    image: lscr.io/linuxserver/deluge
+    image: binhex/arch-delugevpn
     container_name: deluge
     restart: unless-stopped
     networks:
@@ -25,6 +25,7 @@ services:
       NAME_SERVERS: "1.0.0.1,1.1.1.1"
       PGID: "100"
       PUID: "99"
+      STRICT_PORT_FORWARD: "yes"
       VPN_CLIENT: "wireguard"
       VPN_ENABLED: "yes"
       VPN_PASS: "aaaaa"

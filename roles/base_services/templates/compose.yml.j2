@@ -233,6 +233,7 @@ services:
       INFO: "1" # Allow access to /info endpoint
       POST: "0" # Disallow any POST operations (effectively read-only)
     labels:
+      folder.view2: "Base Services"
       net.unraid.docker.icon: {{ homarr_labs_icons_url }}/docker-moby.png
       net.unraid.docker.managed: composeman
       net.unraid.docker.shell: sh
