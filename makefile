@@ -18,8 +18,23 @@ lint:
 deploy:
 	ansible-playbook playbook.yml -u root
 
+vaults := $(wildcard group_vars/*/vault.yml host_vars/*/vault.yml)
+
 decrypt:
-	ansible-vault decrypt group_vars/all/vault.yml
+	@for file in $(vaults); do \
+		if [ -f "$$file" ]; then \
+			ansible-vault decrypt "$$file"; \
+		else \
+			echo "File $$file does not exist."; \
+		fi \
+	done
 
 encrypt:
-	ansible-vault encrypt group_vars/all/vault.yml
+	@for file in $(vaults); do \
+	    echo "Processing $$file"; \
+		if [ -f "$$file" ]; then \
+			ansible-vault encrypt "$$file"; \
+		else \
+			echo "File $$file does not exist."; \
+		fi \
+	done
