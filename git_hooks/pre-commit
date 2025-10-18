@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# This pre-commit hook checks that all vault.yml files in group_vars/*/ and host_vars/*/ are encrypted
+# before allowing a commit.
+
+VAULT_FILES=()
+
+# Add all group_vars/*/vault.yml files that are staged
+while IFS= read -r file; do
+    VAULT_FILES+=("$file")
+done < <(git diff --cached --name-only | grep -E '^group_vars/.*/vault\.yml$')
+
+# Add all host_vars/*/vault.yml files that are staged
+while IFS= read -r file; do
+    VAULT_FILES+=("$file")
+done < <(git diff --cached --name-only | grep -E '^host_vars/.*/vault\.yml$')
+
+# Function to check if a file is encrypted
+check_vault_encryption() {
+    local file=$1
+    local location=$2
+    
+    if [ "$location" = "working" ]; then
+        if [ -f "${file}" ]; then
+            if ! head -n 1 "${file}" | grep -q '^\$ANSIBLE_VAULT;'; then
+                echo -e "\033[38;5;208mERROR: Working directory ${file} is not encrypted!\033[0m"
+                echo -e "\033[38;5;208mRun 'make encrypt' and try again.\033[0m"
+                return 1
+            fi
+        fi
+    elif [ "$location" = "staged" ]; then
+        if ! git show ":${file}" | head -n 1 | grep -q '^\$ANSIBLE_VAULT;'; then
+            echo -e "\033[38;5;208mERROR: Staged ${file} is not encrypted!\033[0m"
+            echo -e "\033[38;5;208mRun 'make encrypt', then 'git add ${file}' and try again.\033[0m"
+            return 1
+        fi
+    fi
+    
+    return 0
+}
+
+# Check each vault file
+for vault_file in "${VAULT_FILES[@]}"; do
+    echo "Checking vault file encryption for ${vault_file}..."
+    
+    # Check the working directory version
+    if ! check_vault_encryption "${vault_file}" "working"; then
+        exit 1
+    fi
+    
+    # Check the staged version
+    if ! check_vault_encryption "${vault_file}" "staged"; then
+        exit 1
+    fi
+    
+    echo -e "\033[38;5;108m${vault_file} encrypted. Safe to commit.\033[0m"
+done
+
+exit 0

@@ -6,7 +6,8 @@ setup:
 	ansible-galaxy install -r galaxy_requirements.yml
 
 gitinit:
-	@./git-init.sh
+	cp git_hooks/pre-commit .git/hooks/pre-commit
+	chmod +x .git/hooks/pre-commit
 	@echo "ansible vault pre-commit hook installed"
 	@echo "don't forget to create a .vaultpass file"
 
