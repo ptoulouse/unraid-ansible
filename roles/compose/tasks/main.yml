@@ -4,9 +4,9 @@
     that:
       - compose_stack_name is defined
       - compose_stack_name | length > 0
-    fail_msg: "'compose_stack_name' is not defined"
+    fail_msg: "'compose_stack_name' must be defined and not empty"
 
-- name: Create compose directory for {{ compose_stack_name }}
+- name: Create compose directory - {{ compose_stack_name }}
   ansible.builtin.file:
     dest: "{{ compose_path }}/{{ compose_stack_name }}"
     state: directory
@@ -14,7 +14,7 @@
     group: root
     mode: '0700'
 
-- name: Create data subdirs for {{ compose_stack_name }}
+- name: Create data subdirs - {{ compose_stack_name }}
   when: compose_data_subdirs | length > 0
   ansible.builtin.file:
     path: "{{ compose_data_path }}/{{ item.subdir }}"
@@ -24,7 +24,7 @@
     mode: "{{ item.mode | default('0750') }}"
   loop: "{{ compose_data_subdirs }}"
 
-- name: Create configuration files for {{ compose_stack_name }}
+- name: Create configuration files - {{ compose_stack_name }}
   when: compose_config_files | length > 0
   ansible.builtin.template:
     src: "{{ item.src }}"
@@ -34,18 +34,20 @@
     mode: "{{ item.mode | default('0640') }}"
     lstrip_blocks: true
   loop: "{{ compose_config_files }}"
+  notify: Recreate compose stack
 
-- name: Install compose file for {{ compose_stack_name }}
+- name: Install compose file - {{ compose_stack_name }}
   ansible.builtin.template:
     src: "{{ compose_template }}"
     dest: "{{ compose_path }}/{{ compose_stack_name }}/{{ compose_file }}"
     owner: root
     group: root
     mode: '0600'
-    validate: docker-compose -f %s config
-  notify: Restart compose stack
+    lstrip_blocks: true
+    validate: docker compose -f %s config
+  notify: Recreate compose stack
 
-- name: Install Compose Manager files for {{ compose_stack_name }}
+- name: Install Compose Manager files - {{ compose_stack_name }}
   when: compose_manager
   block:
 
@@ -77,8 +79,8 @@
         group: root
         mode: '0600'
 
-- name: Start compose stack {{ compose_stack_name }}
+- name: Ensure compose stack is running - {{ compose_stack_name }}
   community.docker.docker_compose_v2:
     project_src: "{{ compose_path }}/{{ compose_stack_name }}"
     state: present
-    pull: policy
+    pull: missing

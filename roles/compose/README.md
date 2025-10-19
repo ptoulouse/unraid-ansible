@@ -3,6 +3,13 @@
 An Ansible role that deploys a docker-compose application, targeted at Unraid
 Compose Manager.
 
+## Dependencies
+
+The following are required:
+
+- `community.docker` collection is installed where you run ansible.
+- Unraid Compose Manager plugin is installed on the Unraid target.
+
 ## Role Variables
 
 Available variables are listed below, along with default values (see
